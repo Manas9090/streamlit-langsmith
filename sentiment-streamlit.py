@@ -2,10 +2,10 @@ import streamlit as st
 import openai
 openai.api_key = st.secrets["openai"]["api_key"] 
 
-import os
-from langsmith import Client
+# import os
+# from langsmith import Client
 
-client = Client(api_key=st.secrets("LANGSMITH_API_KEY"))
+# client = Client(api_key=st.secrets("LANGSMITH_API_KEY"))
 
 #Avoid hardcoding API keys — use environment variables instead 
 
