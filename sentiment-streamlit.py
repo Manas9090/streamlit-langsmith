@@ -4,8 +4,9 @@ from langsmith import Client, trace
 
 # Load API keys securely
 openai.api_key = st.secrets["openai"]["api_key"]
+client = Client(api_key=st.secrets["LANGSMITH"]["API_KEY"])
+#client = Client(api_key=st.secrets["LANGSMITH_API_KEY"])
 client = Client(api_key=st.secrets["LANGSMITH_API_KEY"])
-#client = Client(LANGSMITH_API_KEY1=st.secrets["LANGSMITH_API_KEY"])
 
 # Add tracing decorator to monitor the function
 @trace(name="Sentiment Analysis", metadata={"app": "Streamlit Sentiment Analysis"})
