@@ -1,30 +1,27 @@
-import streamlit as st 
+import streamlit as st
 import openai
-openai.api_key = st.secrets["openai"]["api_key"] 
+from langsmith import Client, trace
 
-# import os
-from langsmith import Client
+# Load API keys securely
+openai.api_key = st.secrets["openai"]["api_key"]
+client = Client(LANGSMITH_API_KEY1=st.secrets["LANGSMITH_API_KEY"])
 
-client = Client(LANGSMITH_API_KEY1=st.secrets("LANGSMITH_API_KEY"))
-
-#Avoid hardcoding API keys — use environment variables instead 
-
+# Add tracing decorator to monitor the function
+@trace(name="Sentiment Analysis", metadata={"app": "Streamlit Sentiment Analysis"})
 def sentiment_analysis(text): 
     try:
-        response = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": f"Analyze the sentiment of the following text:\n\n{text}"}
-            ],
-            max_tokens=100
-        )
-        #return response["choices"][0]["message"]["content"] 
-        print("Add response", response)
-        #return response.choices[0].message["content"]
-        return response.choices[0].message.content
-        #return response
+        with st.spinner("Analyzing sentiment..."):
+            response = openai.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": f"Analyze the sentiment of the following text:\n\n{text}"}
+                ],
+                max_tokens=100
+            )
+            return response.choices[0].message['content']
     except Exception as e:
+        client.log_error(str(e))  # Log errors to LangSmith
         return f"Error: {e}"
 
 # Streamlit UI
