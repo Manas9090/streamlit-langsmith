@@ -1,7 +1,7 @@
 import streamlit as st
 import openai
 from langsmith import Client, trace
-
+st.write("Secrets:", st.secrets)
 # Load API keys securely
 openai.api_key = st.secrets["openai"]["api_key"]
 client = Client(api_key=st.secrets["langsmith"]["api_key"]) 
